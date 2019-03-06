@@ -8,13 +8,14 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.ColorRes;
 
 @Entity(tableName = "note_table")
 public class Note {
     private String title;
     private String description;
     private String time;
-    private int color;
+    @ColorRes private int color;
     @PrimaryKey(autoGenerate = true)
     public int id = 0;
 

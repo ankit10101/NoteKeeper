@@ -50,8 +50,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteHolder> {
         viewHolder.tvTitle.setText(notesArrayList.get(position).getTitle());
         viewHolder.tvDesc.setText(notesArrayList.get(position).getDescription());
         viewHolder.tvTime.setText(notesArrayList.get(position).getTime());
-        //To give random color to each note
-
         if (currentNote.getColor() == 0) {
             Random r = new Random();
             int red = r.nextInt(256);
@@ -87,6 +85,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteHolder> {
                     Note itemToBeRemoved = notesArrayList.get(position);
                     notesArrayList.remove(position);
                     db.noteDao().deleteNote(itemToBeRemoved);
+                    notifyItemRemoved(position);
                     return true;
                 }
             });

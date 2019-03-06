@@ -2,6 +2,7 @@ package com.example.notekeeper;
 
 import android.arch.persistence.room.Room;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,8 +16,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -29,12 +32,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        db = Room.databaseBuilder(this,NoteDatabase.class,"notesDB.db").allowMainThreadQueries().build();
+        db = Room.databaseBuilder(this, NoteDatabase.class, "notesDB.db").allowMainThreadQueries().build();
         notes.addAll(db.noteDao().getNotes());
         recyclerView = findViewById(R.id.recyclerView);
         button = findViewById(R.id.fabADD);
         final NoteAdapter noteAdapter = new NoteAdapter(notes, MainActivity.this, db);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        //recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(noteAdapter);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         button.setOnClickListener(new View.OnClickListener() {
@@ -55,7 +58,13 @@ public class MainActivity extends AppCompatActivity {
                         etDesc = dialogView.findViewById(R.id.etDesc);
                         String title = etTitle.getText().toString();
                         String description = etDesc.getText().toString();
-                        Note note = new Note(title, description, String.format("dd-mm-yyyy", new Date()), 0);
+                        Random r = new Random();
+                        int red = r.nextInt(256);
+                        int blue = r.nextInt(256);
+                        int green = r.nextInt(256);
+                        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy\nHH:mm:ss");
+                        String dateString = format.format(new Date());
+                        Note note = new Note(title, description, dateString, Color.argb(255, red, blue, green));
                         db.noteDao().insertNote(note);
                         notes.add(note);
                         noteAdapter.notifyItemInserted(notes.size() - 1);
