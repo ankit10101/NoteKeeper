@@ -6,33 +6,11 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent" />
 
-        <EditText
-            android:id="@+id/etTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:hint="@string/title_Hint"
-            android:inputType="text" />
-
-        <EditText
-            android:id="@+id/etDesc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:hint="@string/desc_hint"
-            android:inputType="textMultiLine"
-            android:scrollHorizontally="false" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabADD"
