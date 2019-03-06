@@ -26,10 +26,12 @@ import java.util.Random;
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteHolder> {
     private ArrayList<Note> notesArrayList = new ArrayList<>();
     private Context context;
+    private NoteDatabase db;
 
-    public NoteAdapter(ArrayList<Note> objectsArrayList, Context context) {
+    public NoteAdapter(ArrayList<Note> objectsArrayList, Context context, NoteDatabase db) {
         this.notesArrayList = objectsArrayList;
         this.context = context;
+        this.db = db;
     }
 
     @NonNull
@@ -84,8 +86,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteHolder> {
                     int position = getAdapterPosition();
                     Note itemToBeRemoved = notesArrayList.get(position);
                     notesArrayList.remove(position);
-                    notesArrayList.add(itemToBeRemoved);
-                    notifyItemMoved(position, notesArrayList.size() - 1);
+                    db.noteDao().deleteNote(itemToBeRemoved);
                     return true;
                 }
             });

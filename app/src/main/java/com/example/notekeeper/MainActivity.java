@@ -1,5 +1,6 @@
 package com.example.notekeeper;
 
+import android.arch.persistence.room.Room;
 import android.content.DialogInterface;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -22,14 +23,17 @@ public class MainActivity extends AppCompatActivity {
     EditText etTitle, etDesc;
     FloatingActionButton button;
     ArrayList<Note> notes = new ArrayList<Note>();
+    NoteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        db = Room.databaseBuilder(this,NoteDatabase.class,"notesDB.db").allowMainThreadQueries().build();
+        notes.addAll(db.noteDao().getNotes());
         recyclerView = findViewById(R.id.recyclerView);
         button = findViewById(R.id.fabADD);
-        final NoteAdapter noteAdapter = new NoteAdapter(notes, MainActivity.this);
+        final NoteAdapter noteAdapter = new NoteAdapter(notes, MainActivity.this, db);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(noteAdapter);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
@@ -37,14 +41,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showCustomAlert(noteAdapter);
-
-//                String title = etTitle.getText().toString();
-//                String description = etDesc.getText().toString();
-//                Note note = new Note(title, description, String.format("dd-mm-yyyy", new Date()), 0);
-//                notes.add(note);
-//                noteAdapter.notifyItemInserted(notes.size() - 1);
-//                recyclerView.scrollToPosition(notes.size() - 1);
-//                Toast.makeText(MainActivity.this, "NOTE ADDED!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -60,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
                         String title = etTitle.getText().toString();
                         String description = etDesc.getText().toString();
                         Note note = new Note(title, description, String.format("dd-mm-yyyy", new Date()), 0);
+                        db.noteDao().insertNote(note);
                         notes.add(note);
                         noteAdapter.notifyItemInserted(notes.size() - 1);
                         recyclerView.scrollToPosition(notes.size() - 1);
